@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  test:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Poetry
+      run: |
+        pip install poetry
+        poetry --version
+
+    - name: Install project dependencies using Poetry
+      run: poetry install --no-root --no-interaction --no-ansi --with dev,pptx,excel
+  
+    - name: Check code formatting with Black
+      run: poetry run black --check .
+
+    - name: Linting with Flake8
+      run: poetry run flake8 . --ignore=E501,W503,E203,E704,E701
+
+    - name: Type checking with MyPy
+      run: poetry run mypy .
+
+    - name: Unit testing with Pytest
+      run: poetry run pytest -vv
