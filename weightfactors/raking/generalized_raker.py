@@ -37,11 +37,12 @@ class GeneralizedRaker:
         ... [0.9   0.9   0.9   0.9   0.9   1.125 1.125 1.125 1.125]
 
     References:
-        https://dev.to/potloc/generalized-raking-for-survey-weighting-2d1d
-            https://orca.cardiff.ac.uk/id/eprint/109727/1/2018daviesgpphd.pdf
+        This implementation has been largely inspired by Jérôme Parent-Lévesque's article on the subject:
+            https://dev.to/potloc/generalized-raking-for-survey-weighting-2d1d
+                https://www.jstor.org/stable/2290793
 
     Note:
-        The variables in the equation and implementation of the algorithm
+        For readability, the variables in the equation and implementation of the algorithm
         have been renamed in this module as follows:
 
             - X = `design_matrix`
@@ -133,7 +134,8 @@ class GeneralizedRaker:
                     0 in unique_values and 1 in unique_values
                 ):
                     raise ValueError(
-                        f"Exclusion column '{self.exclusion_column}' contains values other than 0 and 1"
+                        f"Exclusion column '{self.exclusion_column}' is invalid. "
+                        "The exclusion column should be a column of 0's and 1's."
                     )
 
     def validate_output(
@@ -201,6 +203,8 @@ class GeneralizedRaker:
             WeightsConvergenceError if the algorithm did not converge before `max_steps`
                 was reached or if `early_stopping` has been triggered
 
+        Returns:
+            Weight factors as a 1d NumPy array of floats
         """
         self.validate_input(data)
 
@@ -269,7 +273,7 @@ class GeneralizedRaker:
             all_weights[data.index] = weights  # Set weights for selected rows
             all_weights[non_weighted_indices] = 1.0  # Set weights for non-selected rows
 
-            # Sort the weights array based on the original dataframe index
+            # Sort the weights array based on the original dataframe indices
             weights = all_weights[original_data.index.argsort()]
 
         self.weights = weights
