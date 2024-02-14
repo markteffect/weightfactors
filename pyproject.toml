@@ -17,6 +17,9 @@ flake8 = "^7.0.0"
 mypy = "^1.8.0"
 pytest = "^8.0.0"
 
+[tool.mypy]
+ignore_missing_imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
