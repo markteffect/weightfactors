@@ -28,7 +28,7 @@ jobs:
         poetry --version
 
     - name: Install project dependencies using Poetry
-      run: poetry install --no-root --no-interaction --no-ansi --with dev,pptx,excel
+      run: poetry install --no-root --no-interaction --no-ansi --with dev
   
     - name: Check code formatting with Black
       run: poetry run black --check .
