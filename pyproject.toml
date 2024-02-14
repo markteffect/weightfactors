@@ -4,6 +4,7 @@ version = "0.0.1"
 description = "Calculate weight factors for survey data to approximate a representative sample"
 authors = ["DemianvG <d.vangils@markteffect.nl>"]
 readme = "README.md"
+packages = [{include = "weightfactors"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
