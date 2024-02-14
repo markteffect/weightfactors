@@ -63,7 +63,7 @@ class GeneralizedRaker:
         self.raise_on_extreme = raise_on_extreme
         self.cutoffs = cutoffs
         self.exclusion_column = exclusion_column
-        self.question_names = list(population_targets.keys())
+        self.column_names = list(population_targets.keys())
         self.loss: List[float] = [np.inf]
         self.success: bool = False
         self.weights = np.empty(0)
@@ -83,7 +83,7 @@ class GeneralizedRaker:
             ...  [0 1]
             ...  [0 1]]
         """
-        dummies = pd.get_dummies(data, columns=self.question_names)
+        dummies = pd.get_dummies(data, columns=self.column_names)
         design_matrix = dummies[dummies.columns.difference(data.columns, sort=False)]
         return np.asarray(design_matrix.values)
 
@@ -98,7 +98,7 @@ class GeneralizedRaker:
 
         """
         target_vector = []
-        for question in self.question_names:
+        for question in self.column_names:
             counts = data[question].value_counts(sort=False)  # Don't sort by frequency
             total_observed_n = counts.sum()
             sorted_counts = dict(sorted(counts.items()))  # Sort keys alphabetically
