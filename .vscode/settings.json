@@ -1,0 +1,10 @@
+{
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "flake8.args": [
+        "--max-line-length=120",
+        "--ignore=E501,W503,E203,E704,E701"
+    ],
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+}
