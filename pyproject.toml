@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weightfactors"
-version = "0.0.1"
+version = "0.0.2"
 description = "Calculate weight factors for survey data to approximate a representative sample"
 authors = ["DemianvG <d.vangils@markteffect.nl>"]
 readme = "README.md"
@@ -13,7 +13,7 @@ numpy = "^1.26.4"
 
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
+black = "^24.3.0"
 flake8 = "^7.0.0"
 mypy = "^1.8.0"
 pytest = "^8.0.0"
