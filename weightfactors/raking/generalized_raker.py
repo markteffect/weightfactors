@@ -22,7 +22,7 @@ class GeneralizedRaker:
             Whether to raise an error when the weight factors are extreme
                 according to `cutoffs`, else we raise a warning. Default is False.
         cutoffs: Dict[str, float], optional
-            What we consider extreme weight factors. 'lo' is the lower bound (defaults to 0.25)
+            When weights are considered to be extreme. 'lo' is the lower bound (defaults to 0.25)
                 and 'hi' is the upper bound (defaults to 4). If `raise_on_extreme` we raise an
                     error if any weight exceeds the cutoffs, otherwise we clip the extremes to the cutoffs
         exclusion_column: str, optional
@@ -118,10 +118,17 @@ class GeneralizedRaker:
             # Make sure all keys are present in the dataset
             if key not in data.columns:
                 raise KeyError(f"There is no column {key} in the provided dataset")
-            # Make sure there are no missing values in the questions used for calculating weights
+            # Make sure there are no missing values in the columns used for calculating weights
             if data[key].isna().any(axis=None):
                 raise ValueError(f"Column {key} contains missing values")
+            # Make sure all unique values in the target columns have been mapped
+            # It is impossible to set values with observations to a weight of 0
+            if len(data[key].unique()) != len(value):
+                raise KeyError(
+                    f"There are observations for a value in '{key}' that has not been mapped to a population target"
+                )
             # Make sure we have at least 1 observation for each category
+            # It is impossible to set values without observations to a weight larger than 1
             for k, _ in value.items():
                 if k not in data[key].unique():
                     raise KeyError(f"There are no observations for {k} in column {key}")
@@ -193,11 +200,11 @@ class GeneralizedRaker:
             data: pd.DataFrame
                 The survey dataset
             max_steps: int
-                Maximum number of iterations
+                The maximum number of iterations to try and reach convergence
             tolerance: float
-                Maximum tolerance for loss, we claim success if the loss is lower than this
+                Maximum tolerance for loss, convergence is reached if the loss is smaller than this value
             early_stopping: int
-                Maximum number of iterations without improvement in loss before we call quits
+                Maximum number of iterations without improvement in loss
 
         Raises:
             WeightsConvergenceError if the algorithm did not converge before `max_steps`

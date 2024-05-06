@@ -1,5 +1,5 @@
 ![Continuous Integration](https://github.com/markteffect/weightfactors/actions/workflows/ci.yml/badge.svg)
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10-blue)
+![Python](https://img.shields.io/badge/Python-3.9+-blue)
 # **Weight Factors**
 Calculate weight factors for survey data to approximate a representative sample
 
