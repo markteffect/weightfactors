@@ -38,7 +38,10 @@ def test_invalid_input():
         data = pd.DataFrame({"Gender": ["Male", "Male", "Female"]})
         raker = GeneralizedRaker({"Gender": {"Male": 0.51, "Female": 0.5}})
         raker.rake(data)
-    with pytest.raises(KeyError, match="There are observations for a value in 'Gender' that has not been mapped to a population target"):
+    with pytest.raises(
+        KeyError,
+        match="There are observations for a value in 'Gender' that has not been mapped to a population target",
+    ):
         data = pd.DataFrame({"Gender": ["Male", "Male", "Female", "Other"]})
         raker = GeneralizedRaker({"Gender": {"Male": 0.51, "Female": 0.49}})
         raker.rake(data)

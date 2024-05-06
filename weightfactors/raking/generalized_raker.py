@@ -124,7 +124,9 @@ class GeneralizedRaker:
             # Make sure all unique values in the target columns have been mapped
             # It is impossible to set values with observations to a weight of 0
             if len(data[key].unique()) != len(value):
-                raise KeyError(f"There are observations for a value in '{key}' that has not been mapped to a population target")
+                raise KeyError(
+                    f"There are observations for a value in '{key}' that has not been mapped to a population target"
+                )
             # Make sure we have at least 1 observation for each category
             # It is impossible to set values without observations to a weight larger than 1
             for k, _ in value.items():
