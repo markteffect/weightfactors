@@ -22,7 +22,7 @@ class GeneralizedRaker:
             Whether to raise an error when the weight factors are extreme
                 according to `cutoffs`, else we raise a warning. Default is False.
         cutoffs: Dict[str, float], optional
-            What we consider extreme weight factors. 'lo' is the lower bound (defaults to 0.25)
+            When weights are considered to be extreme. 'lo' is the lower bound (defaults to 0.25)
                 and 'hi' is the upper bound (defaults to 4). If `raise_on_extreme` we raise an
                     error if any weight exceeds the cutoffs, otherwise we clip the extremes to the cutoffs
         exclusion_column: str, optional
@@ -193,11 +193,11 @@ class GeneralizedRaker:
             data: pd.DataFrame
                 The survey dataset
             max_steps: int
-                Maximum number of iterations
+                The maximum number of iterations to try and reach convergence
             tolerance: float
-                Maximum tolerance for loss, we claim success if the loss is lower than this
+                Maximum tolerance for loss, convergence is reached if the loss is smaller than this value
             early_stopping: int
-                Maximum number of iterations without improvement in loss before we call quits
+                Maximum number of iterations without improvement in loss
 
         Raises:
             WeightsConvergenceError if the algorithm did not converge before `max_steps`
