@@ -118,10 +118,15 @@ class GeneralizedRaker:
             # Make sure all keys are present in the dataset
             if key not in data.columns:
                 raise KeyError(f"There is no column {key} in the provided dataset")
-            # Make sure there are no missing values in the questions used for calculating weights
+            # Make sure there are no missing values in the columns used for calculating weights
             if data[key].isna().any(axis=None):
                 raise ValueError(f"Column {key} contains missing values")
+            # Make sure all unique values in the target columns have been mapped
+            # It is impossible to set values with observations to a weight of 0
+            if len(data[key].unique()) != len(value):
+                raise KeyError(f"There are observations for a value in '{key}' that has not been mapped to a population target")
             # Make sure we have at least 1 observation for each category
+            # It is impossible to set values without observations to a weight larger than 1
             for k, _ in value.items():
                 if k not in data[key].unique():
                     raise KeyError(f"There are no observations for {k} in column {key}")
