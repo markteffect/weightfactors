@@ -132,7 +132,9 @@ class GeneralizedRaker:
             # It is impossible to set values without observations to a weight larger than 0
             for k, v in value.items():
                 if k not in data[key].unique() and v > 0:
-                    raise KeyError(f"There are no observations for {k} in column {key}, but a population target has been set")
+                    raise KeyError(
+                        f"There are no observations for {k} in column {key}, but a population target has been set"
+                    )
             # Make sure the inclusion column is valid
             if self.exclusion_column:
                 if self.exclusion_column not in data.columns:
