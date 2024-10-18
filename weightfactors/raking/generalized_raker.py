@@ -108,6 +108,22 @@ class GeneralizedRaker:
                 target_vector.append(target_n)
         return np.asarray(target_vector)
 
+    def validate_exclusion_column(self, data: pd.DataFrame) -> None:
+        # Make sure the inclusion column is valid
+        if self.exclusion_column:
+            if self.exclusion_column not in data.columns:
+                raise KeyError(
+                    f"There is no column {self.exclusion_column} in the provided dataset"
+                )
+            unique_values = set(data[self.exclusion_column])
+            if not len(unique_values) == 2 or not (
+                0 in unique_values and 1 in unique_values
+            ):
+                raise ValueError(
+                    f"Exclusion column '{self.exclusion_column}' is invalid. "
+                    "The exclusion column should be a column of 0's and 1's."
+                )
+
     def validate_input(self, data: pd.DataFrame) -> None:
         for key, value in self.population_targets.items():
             # Make sure the values per group add to one
@@ -134,18 +150,6 @@ class GeneralizedRaker:
                 if k not in data[key].unique() and v > 0:
                     raise KeyError(
                         f"There are no observations for {k} in column {key}, but a population target has been set"
-                    )
-            # Make sure the inclusion column is valid
-            if self.exclusion_column:
-                if self.exclusion_column not in data.columns:
-                    raise KeyError(f"There is no column {key} in the provided dataset")
-                unique_values = set(data[self.exclusion_column])
-                if not len(unique_values) == 2 or not (
-                    0 in unique_values and 1 in unique_values
-                ):
-                    raise ValueError(
-                        f"Exclusion column '{self.exclusion_column}' is invalid. "
-                        "The exclusion column should be a column of 0's and 1's."
                     )
 
     def validate_output(
@@ -216,11 +220,13 @@ class GeneralizedRaker:
         Returns:
             Weight factors as a 1d NumPy array of floats
         """
-        self.validate_input(data)
 
         if self.exclusion_column:
+            self.validate_exclusion_column(data)
             original_data = data
             data = original_data[original_data[self.exclusion_column] == 1]
+
+        self.validate_input(data)
 
         design_matrix = self.create_design_matrix(data)
         target_vector = self.create_target_vector(data)
