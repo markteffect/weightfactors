@@ -1,13 +1,11 @@
-from weightfactors.utils.exceptions import (
-    WeightsConvergenceError,
-    ExtremeWeightsError,
-    extreme_weights,
-)
-
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
+
+from weightfactors.utils.exceptions import (ExtremeWeightsError,
+                                            WeightsConvergenceError,
+                                            extreme_weights)
 
 
 class GeneralizedRaker:
@@ -200,7 +198,7 @@ class GeneralizedRaker:
         max_steps: int = 2000,
         tolerance: float = 1e-6,
         early_stopping: int = 25,
-    ) -> np.ndarray[np.float64, Any]:
+    ) -> np.typing.NDArray[np.float64]:
         """Run the generalized raking algorithm
 
         Args:
