@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "weightfactors"
-version = "0.0.5"
+version = "0.0.6"
 description = "Calculate weight factors for survey data to approximate a representative sample"
 authors = ["DemianvG <d.vangils@markteffect.nl>"]
 readme = "README.md"
 packages = [{include = "weightfactors"}]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pandas = "^2.2.0"
-numpy = "^1.26.4"
+python = "^3.10"
+pandas = "^2.2.3"
+numpy = "^2.2.5"
 
 
 [tool.poetry.group.dev.dependencies]
