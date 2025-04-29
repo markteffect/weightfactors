@@ -3,9 +3,11 @@ from typing import Any, Dict, List, Optional
 import numpy as np
 import pandas as pd
 
-from weightfactors.utils.exceptions import (ExtremeWeightsError,
-                                            WeightsConvergenceError,
-                                            extreme_weights)
+from weightfactors.utils.exceptions import (
+    ExtremeWeightsError,
+    WeightsConvergenceError,
+    extreme_weights,
+)
 
 
 class GeneralizedRaker:
