@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weightfactors"
-version = "0.0.8"
+version = "0.0.9"
 description = "Calculate weight factors for survey data to approximate a representative sample"
 authors = ["DemianvG <d.vangils@markteffect.nl>"]
 readme = "README.md"
