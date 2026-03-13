@@ -33,11 +33,11 @@ jobs:
     - name: Install project dependencies using Poetry
       run: poetry install --no-root --no-interaction --no-ansi --with dev
   
-    - name: Check code formatting with Black
-      run: poetry run black --check .
+    - name: Check formatting with Ruff
+      run: poetry run ruff format --check .
 
-    - name: Linting with Flake8
-      run: poetry run flake8 . --ignore=E501,W503,E203,E704,E701
+    - name: Lint with Ruff
+      run: poetry run ruff check .
 
     - name: Type checking with MyPy
       run: poetry run mypy .

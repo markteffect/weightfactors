@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "weightfactors"
-version = "0.0.9"
+version = "0.0.10"
 description = "Calculate weight factors for survey data to approximate a representative sample"
 authors = ["DemianvG <d.vangils@markteffect.nl>"]
 readme = "README.md"
@@ -13,13 +13,22 @@ numpy = "^2.2.5"
 
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.3.0"
-flake8 = "^7.0.0"
 mypy = "^1.8.0"
 pytest = "^8.0.0"
+ruff = "^0.15.6"
 
 [tool.mypy]
 ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
 
 [build-system]
 requires = ["poetry-core"]
