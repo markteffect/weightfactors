@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -22,12 +22,18 @@ class GeneralizedRaker:
             Whether to raise an error when the weight factors are extreme
                 according to `cutoffs`, else we raise a warning. Default is False.
         cutoffs: Dict[str, float], optional
-            When weights are considered to be extreme. 'lo' is the lower bound (defaults to 0.25)
-                and 'hi' is the upper bound (defaults to 4). If `raise_on_extreme` we raise an
-                    error if any weight exceeds the cutoffs, otherwise we clip the extremes to the cutoffs
+            When weights are considered to be extreme.
+            'lo' is the lower bound (defaults to 0.25) and
+            'hi' is the upper bound (defaults to 4).
+            If `raise_on_extreme` we raise an error if any
+            weight exceeds the cutoffs, otherwise we clip
+            the extremes to the cutoffs.
         exclusion_column: str, optional
-            a column of 0's and 1's in the input data that denotes which rows should get a weight factor (1)
-                and which rows should not (0). Rows that should not get weighted get a weight factor of exactly 1.
+            A column of 0's and 1's in the input data that
+            denotes which rows should get a weight factor
+            (1) and which rows should not (0). Rows that
+            should not get weighted get a weight factor of
+            exactly 1.
 
     Example:
         >>> dataset = pd.DataFrame({"Gender": [0, 0, 0, 0, 0, 1, 1, 1, 1]})
@@ -37,13 +43,15 @@ class GeneralizedRaker:
         ... [0.9   0.9   0.9   0.9   0.9   1.125 1.125 1.125 1.125]
 
     References:
-        This implementation has been largely inspired by Jérôme Parent-Lévesque's article on the subject:
+        This implementation has been largely inspired by
+        Jérôme Parent-Lévesque's article on the subject:
             https://dev.to/potloc/generalized-raking-for-survey-weighting-2d1d
                 https://www.jstor.org/stable/2290793
 
     Note:
-        For readability, the variables in the equation and implementation of the algorithm
-        have been renamed in this module as follows:
+        For readability, the variables in the equation and
+        implementation of the algorithm have been renamed in
+        this module as follows:
 
             - X = `design_matrix`
             - T = `target_vector`
@@ -55,17 +63,17 @@ class GeneralizedRaker:
 
     def __init__(
         self,
-        population_targets: Dict[str, Dict[Any, float]],
+        population_targets: dict[str, dict[Any, float]],
         raise_on_extreme: bool = False,
-        cutoffs: Dict[str, float] = {"lo": 0.25, "hi": 4},
-        exclusion_column: Optional[str] = None,
+        cutoffs: dict[str, float] = {"lo": 0.25, "hi": 4},
+        exclusion_column: str | None = None,
     ):
         self.population_targets = population_targets
         self.raise_on_extreme = raise_on_extreme
         self.cutoffs = cutoffs
         self.exclusion_column = exclusion_column
         self.column_names = list(population_targets.keys())
-        self.loss: List[float] = [np.inf]
+        self.loss: list[float] = [np.inf]
         self.success: bool = False
         self.weights = np.empty(0)
 
@@ -113,7 +121,8 @@ class GeneralizedRaker:
         if self.exclusion_column:
             if self.exclusion_column not in data.columns:
                 raise KeyError(
-                    f"There is no column {self.exclusion_column} in the provided dataset"
+                    f"There is no column {self.exclusion_column}"
+                    " in the provided dataset"
                 )
             unique_values = set(data[self.exclusion_column])
             if not len(unique_values) == 2 or not (
@@ -134,7 +143,8 @@ class GeneralizedRaker:
             # Make sure all keys are present in the dataset
             if key not in data.columns:
                 raise KeyError(f"There is no column {key} in the provided dataset")
-            # Make sure there are no missing values in the columns used for calculating weights
+            # Make sure there are no missing values in the
+            # columns used for calculating weights
             if data[key].isna().any(axis=None):
                 raise ValueError(f"Column {key} contains missing values")
             # Make sure all unique values in the target columns have been mapped
@@ -142,14 +152,17 @@ class GeneralizedRaker:
             for k in list(data[key].unique()):
                 if k not in list(value.keys()):
                     raise KeyError(
-                        f"There are observations for a value in '{key}' that has not been mapped to a population target"
+                        f"There are observations for a value in '{key}'"
+                        " that has not been mapped to a population target"
                     )
-            # Make sure we have at least 1 observation for each category
-            # It is impossible to set values without observations to a weight larger than 0
+            # Make sure we have at least 1 observation for
+            # each category. It is impossible to set values
+            # without observations to a weight larger than 0
             for k, v in value.items():
                 if k not in data[key].unique() and v > 0:
                     raise KeyError(
-                        f"There are no observations for {k} in column {key}, but a population target has been set"
+                        f"There are no observations for {k} in column"
+                        f" {key}, but a population target has been set"
                     )
 
     def validate_output(
@@ -169,9 +182,12 @@ class GeneralizedRaker:
                 )
             else:
                 extreme_weights(
-                    "Some observations have been ascribed extreme weight factors. "
-                    f"Smallest weight: {weights.min()}, Largest weight: {weights.max()}. "
-                    f"Extreme weights will be clipped to range {self.cutoffs['lo']} thru {self.cutoffs['hi']}"
+                    "Some observations have been ascribed"
+                    " extreme weight factors. "
+                    f"Smallest weight: {weights.min()}, "
+                    f"Largest weight: {weights.max()}. "
+                    "Extreme weights will be clipped to range"
+                    f" {self.cutoffs['lo']} thru {self.cutoffs['hi']}"
                 )
 
     def clip_weights(self, weights: np.ndarray) -> np.ndarray:
@@ -180,7 +196,8 @@ class GeneralizedRaker:
 
         Parameters:
         - weights (numpy.ndarray): 1D array of weight factors.
-        - cutoffs (dict): Dictionary with 'lo' as the lower bound and 'hi' as the upper bound.
+        - cutoffs (dict): Dictionary with 'lo' as the lower
+          bound and 'hi' as the upper bound.
 
         Returns:
         - numpy.ndarray: Clipped weight factors.
@@ -209,7 +226,8 @@ class GeneralizedRaker:
             max_steps: int
                 The maximum number of iterations to try and reach convergence
             tolerance: float
-                Maximum tolerance for loss, convergence is reached if the loss is smaller than this value
+                Maximum tolerance for loss, convergence is reached
+                if the loss is smaller than this value
             early_stopping: int
                 Maximum number of iterations without improvement in loss
 
@@ -237,7 +255,8 @@ class GeneralizedRaker:
         early_stop_trigger = early_stopping
 
         for step in range(max_steps):
-            # Update the Lagrange multipliers based on the current weights and constraints
+            # Update the Lagrange multipliers based on the
+            # current weights and constraints
             lagrange_multipliers += np.dot(
                 np.linalg.pinv(
                     np.dot(np.dot(design_matrix.T, identity_matrix), design_matrix)
@@ -267,8 +286,10 @@ class GeneralizedRaker:
                     early_stop_trigger = early_stopping
                 if early_stop_trigger <= 0:
                     raise WeightsConvergenceError(
-                        f"No reduction in loss for {early_stopping} iterations. Stopping. "
-                        f"Total iterations: {step + 1}. Final loss: {self.loss[-1]:.4}"
+                        f"No reduction in loss for {early_stopping}"
+                        f" iterations. Stopping. "
+                        f"Total iterations: {step + 1}. "
+                        f"Final loss: {self.loss[-1]:.4}"
                     )
         self.validate_output(weights)
         if not self.success:

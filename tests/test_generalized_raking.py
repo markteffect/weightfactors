@@ -1,16 +1,15 @@
-from weightfactors import GeneralizedRaker
-from weightfactors.utils.exceptions import (
-    WeightsConvergenceError,
-    ExtremeWeightsError,
-    ExtremeWeightsWarning,
-)
-
 import random
 
 import numpy as np
 import pandas as pd
 import pytest
 
+from weightfactors import GeneralizedRaker
+from weightfactors.utils.exceptions import (
+    ExtremeWeightsError,
+    ExtremeWeightsWarning,
+    WeightsConvergenceError,
+)
 
 random.seed(42)
 
@@ -28,7 +27,10 @@ def test_invalid_input():
         raker.rake(data)
     with pytest.raises(
         KeyError,
-        match="There are observations for a value in 'Gender' that has not been mapped to a population target",
+        match=(
+            "There are observations for a value in 'Gender'"
+            " that has not been mapped to a population target"
+        ),
     ):
         data = pd.DataFrame({"Gender": ["Male", "Male", "Female"]})
         raker = GeneralizedRaker({"Gender": {"DoesNotExist": 0.5, "Female": 0.5}})
@@ -41,7 +43,10 @@ def test_invalid_input():
         raker.rake(data)
     with pytest.raises(
         KeyError,
-        match="There are observations for a value in 'Gender' that has not been mapped to a population target",
+        match=(
+            "There are observations for a value in 'Gender'"
+            " that has not been mapped to a population target"
+        ),
     ):
         data = pd.DataFrame({"Gender": ["Male", "Male", "Female", "Other"]})
         raker = GeneralizedRaker({"Gender": {"Male": 0.51, "Female": 0.49}})
@@ -113,7 +118,7 @@ def test_generalized_raking_one_column_simple():
     assert weights.mean() == pytest.approx(1)
     assert weights[0] > weights[-1]
 
-    X = raker.create_design_matrix(data)
+    X = raker.create_design_matrix(data)  # noqa: N806
     weighted_n = np.sum(X[:, 0] * weights) + np.sum(X[:, 1] * weights)
     new_male_proportion = np.sum(X[:, 0] * weights) / weighted_n
     new_female_proportion = np.sum(X[:, 1] * weights) / weighted_n
@@ -136,7 +141,7 @@ def test_generalized_raking_exclusion_column():
     weights = weights[:75]
     assert weights.mean() == pytest.approx(1)
 
-    X = raker.create_design_matrix(data[:75])
+    X = raker.create_design_matrix(data[:75])  # noqa: N806
     weighted_n = np.sum(X[:, 0] * weights) + np.sum(X[:, 1] * weights)
     new_male_proportion = np.sum(X[:, 0] * weights) / weighted_n
     new_female_proportion = np.sum(X[:, 1] * weights) / weighted_n
@@ -160,7 +165,7 @@ def test_generalized_raking_one_column_harder():
     assert weights.mean() == pytest.approx(1)
     assert weights[0] > weights[-1]
 
-    X = raker.create_design_matrix(data)
+    X = raker.create_design_matrix(data)  # noqa: N806
     weighted_n = (
         np.sum(X[:, 0] * weights)
         + np.sum(X[:, 1] * weights)
@@ -197,7 +202,7 @@ def test_generalized_raking_two_columns():
     weights = raker.rake(data)
     assert weights.mean() == pytest.approx(1)
 
-    X = raker.create_design_matrix(data)
+    X = raker.create_design_matrix(data)  # noqa: N806
     gender_n = np.sum(X[:, 0] * weights) + np.sum(X[:, 1] * weights)
 
     region_n = (
@@ -250,7 +255,7 @@ def test_generalized_raking_three_columns():
     weights = raker.rake(data)
     assert weights.mean() == pytest.approx(1)
 
-    X = raker.create_design_matrix(data)
+    X = raker.create_design_matrix(data)  # noqa: N806
     age_n = (
         np.sum(X[:, 0] * weights)
         + np.sum(X[:, 1] * weights)
