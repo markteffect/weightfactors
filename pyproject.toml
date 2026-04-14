@@ -14,7 +14,7 @@ numpy = "^2.2.5"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"
-pytest = "^8.0.0"
+pytest = ">=8,<10"
 ruff = "^0.15.6"
 
 [tool.mypy]
